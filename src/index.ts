@@ -4,7 +4,28 @@ import { cadastrarUsuário } from "./services/usuárioService";
 import { listarTodosUsuários, listarUsuario, deletarUsuario, alterUsuario, retornarUsuarios, csvExiste } from "./services/csvService";
 import { questionAsync, rl } from "./services/usuárioService";
 // Caminho padrão para escrever o csv
-const fileName = "usuarios.csv"
+
+//importa o path para obter o caminho do arquivo
+const path = require('path')
+// resolve possiveis problemas com o caminho
+const absolutePath = path.resolve(__dirname, 'index.js')
+// cria uma propriedade para receber o caminho
+let path_empty:string = ''
+
+// verifica se o caminho fornecido tem o 'dist' se tiver ele atribui o valor de '../data/usuarios.csv'
+// para o path_empty, caso contrário ele atribui o valor de './data/usuarios.csv'
+// essa verificação é nececssário porque o caminho para achar o arquivo de csv não funciona nos dois
+// noca caso com o mesmo caminho o index.js pode não achar o arquivo e o index.ts pode e vice-versa
+// essa configuração elimina esse problema
+if (absolutePath.includes("dist")){
+    path_empty = '../data/usuarios.csv'
+}
+else{
+    path_empty = './data/usuarios.csv'
+}
+
+// agora ele atribui o valor de path_empty para o filePath
+export const filePath = path_empty
 
 //  AVISO: SE POR ALGUM MOTIVO O ARQUIVO CSV FOR ALTERADO MANUALMENTE DURANTE A EXECUÇÃO DESDE CÓDIGO OU ATÉ MESMO DELETADO, O CÓDIGO VAI QUEBRAR
 //  VISTO QUE A FUNÇÃO QUE GARANTE A INTEGRIDADE É CHAMADA APENAS UMA VEZ DURANTE O CÓDIGO. NA ESTRUTURA LÓGICA DO CÓDIGO NÃO É POSSÍVEL FAZER COM QUE
@@ -13,7 +34,7 @@ const fileName = "usuarios.csv"
 // Função principal que chamas as demais
 async function main(){
     // Verifica se o arquivo csv já existe
-    csvExiste(fileName)
+    csvExiste()
     // Pergunta o usuário se ele quer logar no sistema
     while(true){
         const logar = (await questionAsync("Deseja logar no sistema?(S/N): ")).toLowerCase()
@@ -34,7 +55,7 @@ async function main(){
                     continue
                 }
                 // Chama a função que irá verificar se o usuário existe e qual categoria pertence (Adminstrador/Professor/Convidado)
-                switch(retornarUsuarios(fileName, Email, Senha)){
+                switch(retornarUsuarios(filePath, Email, Senha)){
                     // Adminstrador a função retorna "1"
                     case "1":{
                             while(true){
@@ -53,22 +74,22 @@ async function main(){
                                     }
                                     // Chama a função que retonar todos os registros do CSV
                                     case "2":{
-                                        listarTodosUsuários(fileName)
+                                        listarTodosUsuários(filePath)
                                         continue
                                     }
                                     // Chama a função que retorna apenas um registro, se houver, utiliazando a UUID para selecionar
                                     case "3":{
-                                        await listarUsuario(fileName)
+                                        await listarUsuario(filePath)
                                         continue
                                     }
-                                    // Chama a função que permite alterar dados dos usuário exceto do Marcos
+                                    // Chama a função que permite alterar dados dos usuário exceto do Marco
                                     case "4":{
-                                        await alterUsuario(fileName)
+                                        await alterUsuario(filePath)
                                         continue
                                     }
-                                    // Chama a função que permite deletar usuário desde que ele não seja o Marcos
+                                    // Chama a função que permite deletar usuário desde que ele não seja o Marco
                                     case "5":{
-                                        await deletarUsuario(fileName, Email, Senha)
+                                        await deletarUsuario(filePath, Email, Senha)
                                         continue
                                     }
                                     // Sai deste loop
@@ -95,12 +116,12 @@ async function main(){
                             switch(opcao){
                                 // Chama a função que retonar todos os registros do CSV
                                 case "1":{
-                                    listarTodosUsuários(fileName)
+                                    listarTodosUsuários(filePath)
                                     continue
                                 }
                                 // Chama a função que retorna apenas um registro, se houver, utiliazando a UUID para selecionar
                                 case "2":{
-                                    await listarUsuario(fileName)
+                                    await listarUsuario(filePath)
                                     continue
                                 }
                                 // Encerra este while

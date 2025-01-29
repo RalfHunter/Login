@@ -21,6 +21,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const uuid_1 = require("uuid");
 const csvService_1 = require("./csvService");
 const date_fns_1 = require("date-fns");
+const __1 = require("..");
 // Linha de leitura
 exports.rl = readline.createInterface({
     input: process.stdin,
@@ -48,8 +49,8 @@ function cadastrarUsuário() {
             const user = {
                 UUID: (0, uuid_1.v4)(),
                 Nome: yield questionAsync("Insira um Nome: "),
-                Email: yield questionAsync("Insira um Emal: "),
-                Papel: (yield questionAsync("Insira o Papel: ")) || "Convidado",
+                Email: yield questionAsync("Insira um Email: "),
+                Papel: (yield questionAsync("Insira o Papel(Convidado/Administrador): ")) || "Convidado",
                 Senha: yield questionAsync("Insira uma Senha: "),
                 dataCadastro: validarData(yield questionAsync("Insira a Data de Cadastro: ")),
                 dataAlteracao: validarData(yield questionAsync("Insira a Data de Alteração: ")),
@@ -60,7 +61,7 @@ function cadastrarUsuário() {
             const userFinal = usu_rio_1.usuarioSchema.parse(user);
             // Se não houver erro escreve as credências em um CSV, mas antes
             // Verifica se o Email ou UUID passados já não existem no CSV
-            (0, csvService_1.escreverCSV)("usuarios.csv", userFinal);
+            (0, csvService_1.escreverCSV)(__1.filePath, userFinal);
         }
         catch (err) {
             console.log("Erro na hora de validar os dados passsados!:  ", err);

@@ -1,17 +1,11 @@
-ATENÇÃO, NÃO CONSEGUI FAZER O READLINE RODAR EM TYPESCRIPT.
-ELE ESCREVE NO TERMINAL E AGUARDA UMA RESPOSTA, MAS APÓS
-DIGITAR QUALQUER TECLA ELE DÁ UM 'Restarting...' e volta
-novamente na pergunta, por favor execute o index.js nas pasta dist.
-
-
-
-Execute o index.js
-
 ///////////////INSTRUÇÕES PARA LOGAR///////////////////////////////
 
-Usuário máximo: Marcos
-Senha do usuário máximo: Marcos123$%
-Email do usuário máximo: marcos@gmail.com
+para executar o index.ts utilize o comando: npx ts-node ./src/index.ts
+para executar o index.js navegue até a pasta index.js utilize o comando: node index.js
+
+Usuário máximo: Marco
+Senha do usuário máximo: Marco123$%
+Email do usuário máximo: marco@gmail.com
 O código pede o email e a senha para então logar.
 
 ///////////// O QUE O CÓDIGO FAZ?/////////////////////////////////
@@ -23,7 +17,7 @@ Ele gera por padrão um usuário máximo, que não pode ser alterado ou apagado.
 ///////////////INSTRUÇÕES SOBRE O COMPORTAMENTO DO SOFTWARE////////
 Observações: Os status('inativo'/'ativo') são meramente ilustrativos, não têm interferência
 funcional no código. Alguns campos como inserir data podem ser pulados
-pressionando enter, logo então ele pega a data atual e coloca como padrão.
+pressionando enter, no campo papel caso pressione 'Enter' por padrão será 'Convidado',
 se for alterar alguma dado de um usuário e pressionar enter sem preecher o
 campo, ele usa os dados antigos nos campos que permaneceram vazios.
 caso algum dado seja fornecido de maneira errada, ele retornará um erro

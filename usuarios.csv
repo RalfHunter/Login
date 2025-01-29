@@ -1,6 +1,0 @@
-"UUID","Nome","Email","Senha","Papel","dataCadastro","dataAlteracao","Status"
-"ccc5f0a6-fe4d-4811-af4b-7789e48e1c6e","Marcos","marcos@gmail.com","$2b$10$/ekz0JlGBgYR0BWlK8JWkOzNFMMBhl3Bi2qbuVzhn8OKK81qd3SK.","Administrador","2024-12-27T00:26:15.958Z","2024-12-27T00:26:15.958Z","Ativo"
-"a095458e-f142-4401-8a10-b813d0390f2c","Lucas","lucas@gmail.com","$2b$10$peN.Ro8815cIpgIAJ/5upe9Zb2invQIcbOv1f2pOBNOaFLKLG3TuS","Administrador","2024-12-27T00:00:00.000Z","2024-12-27T00:00:00.000Z","Ativo"
-"dfc0db76-914c-4569-98ef-8c48d9bf3988","Bernado","bernado@gmail.com","$2b$10$lNeEghAZsJwoGnAdG5EZGuAWalNAs3VwGRivbp5qLzfu/zOFRPGsG","Convidado","2024-12-27T00:00:00.000Z","2024-12-27T00:00:00.000Z","Inativo"
-"9aaf0c0a-b2e8-4cb7-bd3c-f7b114b6cd6d","Gomes","gomes@gmail.com","$2b$10$7cCtGbSQp44skil5Q3Oto.1KAuGwnEiFKt6BEjFQJYLHwqKMGxyPO","Convidado","2024-12-27T00:00:00.000Z","2024-12-27T00:00:00.000Z","Inativo"
-"4f7db2ac-3e9a-4db5-811a-8fc533056ce8","Camile","camile@gmail.com","$2b$10$ZYW88XKyIfz.wAPRaNOEd.zanzwWC7SkroFf19R62a4WRoJTt8qCy","Convidado","2024-12-27T00:00:00.000Z","2024-12-27T00:00:00.000Z","Ativo"

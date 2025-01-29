@@ -9,6 +9,8 @@ import {v4 as uuidv4} from 'uuid';
 import bcrypt from 'bcrypt';
 import { validate as isUUID} from 'uuid';
 
+import { filePath } from '..';
+
 // AVISO RELEVANTE
     // Usa a biblioteca do json2csv para transcrever os objetos-jsons criados
     // Para um csv para só então salva-los usando o fs
@@ -16,10 +18,10 @@ import { validate as isUUID} from 'uuid';
 //
 
 // Função para escrever no CSV
-export async function escreverCSV(fileName:string, user:object){
+export async function escreverCSV(filePath:string, user:object){
 
-    if(fs.existsSync(fileName)){
-        const csv = fs.readFileSync(fileName, 'utf8')
+    if(fs.existsSync(filePath)){
+        const csv = fs.readFileSync(filePath, 'utf8')
         const cvsToZod = Papa.parse(csv,{
             header: true,
             dynamicTyping:true
@@ -45,13 +47,13 @@ export async function escreverCSV(fileName:string, user:object){
         console.table([user])
         cvsToZod.push(user)
         const csv2 = await json2csv.parseAsync(cvsToZod, {header:true})
-        fs.writeFileSync(fileName, csv2, "utf8")
+        fs.writeFileSync(filePath, csv2, "utf8")
        
     }
     else{
     
     const csv =  await json2csv.parseAsync(user, {header: true})
-    fs.writeFileSync(fileName, csv, "utf8")}
+    fs.writeFileSync(filePath, csv, "utf8")}
 }
 
 // Função para listar todos os Usuários
@@ -107,14 +109,14 @@ export async function deletarUsuario(filePath: string, email:string, senha:strin
     const user_cadastro: UserZod[] = z.array(usuarioSchema).parse(csvObject)
     try{
     let uid = (await questionAsync("Por favor forneça uma UUID válida: ")).toString()
-    // verifica se a UUID não pertence ao usuário máximo Marcos
+    // verifica se a UUID não pertence ao usuário máximo Marco
     for(const user of user_cadastro){
-        if (user.Email ==="marcos@gmail.com" && user.UUID === uid && user.Email === email){
+        if (user.Email ==="marco@gmail.com" && user.UUID === uid && user.Email === email){
             console.log("Não é possivel deletar este usuário por motivos de integridade!")
             return
         }
     }
-    // Caso não seja o Marcos ele faz novamente a varredura
+    // Caso não seja o Marco ele faz novamente a varredura
     for(const user of user_cadastro){
         if (user.UUID == uid){
             const index = user_cadastro.indexOf(user)
@@ -194,17 +196,17 @@ export async function alterUsuario(filePath: string){
     try{
     // Propriedade para Receber a UUID
     let uid = (await questionAsync("Forneça a UUID para editar o usuário: "))
-    // For para comparar se o usuário a ser alterado não possui o email marcos@gmail.com
+    // For para comparar se o usuário a ser alterado não possui o email marco@gmail.com
     for(const user of user_cadastro){
         // caso seja retorna mensagem de aviso e encerra a função
-        if (user.Email ==="marcos@gmail.com" && user.UUID === uid){
+        if (user.Email ==="marco@gmail.com" && user.UUID === uid){
             console.log("Não é possivel alterar este usuário por motivos de integridade!")
             return
         }
     }
 
     {
-    // Caso o usuário a ser alterado realmente não seja o marcos e exista no Arquivo csv ele permite alterações
+    // Caso o usuário a ser alterado realmente não seja o marco e exista no Arquivo csv ele permite alterações
     for(const user of user_cadastro){
         if (user.UUID == uid){
             // Pede que o Adiministrado logado informe as novos atributos do usuário
@@ -301,10 +303,10 @@ export function retornarUsuarios(filePath: string, Email: string, Senha: string)
 }
 
 // Verificando a Existência de um arquivo csv, caso não encontre ele cria um usuário padrão
-export async function csvExiste(fileName:string){
+export async function csvExiste(){
     try{
         // Caso o arquivo não exista
-    if(!fs.existsSync(fileName)){
+    if(!fs.existsSync(filePath)){
         // Emite um aviso de que não foi encontrado
         // Toma as devidas providências
         console.log("Arquivo csv não encontrado, criando um usuário padrão")
@@ -312,32 +314,32 @@ export async function csvExiste(fileName:string){
         // Ele apesar de ser igual aos outros, dentro do código
         // Ele é tratado como execessão a regra
         // Afim de manter a integridade
-        const marcos = {
+        const marco = {
             UUID:uuidv4(),
-            Nome: "Marcos",
-            Email: "marcos@gmail.com",
-            Senha: "Marcos123$%",
+            Nome: "Marco",
+            Email: "marco@gmail.com",
+            Senha: "Marco123$%",
             Papel:Papel.Administrador,
             dataCadastro: new Date(),
             dataAlteracao: new Date(),
             Status: "Ativo"
         }
         // Criptografa a senha
-        marcos.Senha = bcrypt.hashSync(marcos.Senha, 10)
+        marco.Senha = bcrypt.hashSync(marco.Senha, 10)
         type Schema = z.infer<typeof usuarioSchema>
-        const Marcos: Schema = usuarioSchema.parse(marcos)
-        const csv =  await json2csv.parseAsync(Marcos, {header: true})
-        // Salva as alterações em um csv
-        fs.writeFileSync(fileName, csv, "utf8")
+        const Marco: Schema = usuarioSchema.parse(marco)
+        const csv =  await json2csv.parseAsync(Marco, {header: true})
+        // Salva as alterações em um cs
+        fs.writeFileSync(filePath, csv, "utf8")
     }
     else{
         // Caso o arquivo CSV exista ele verifica se o Usuário "Padrão"
         // Existe no arquivo
-        const marcos = {
+        const marco = {
             UUID:uuidv4(),
-            Nome: "Marcos",
-            Email: "marcos@gmail.com",
-            Senha: "Marcos123$%",
+            Nome: "Marco",
+            Email: "marco@gmail.com",
+            Senha: "Marco123$%",
             Papel:Papel.Administrador,
             dataCadastro: new Date(),
             dataAlteracao: new Date(),
@@ -346,22 +348,22 @@ export async function csvExiste(fileName:string){
         // cria um tipo
         type Schema = z.infer<typeof usuarioSchema>
         // compara este tipo, caso falhe ele retonra um erro "catch"
-        const Marcos: Schema = usuarioSchema.parse(marcos)
+        const Marco: Schema = usuarioSchema.parse(marco)
         // Lê um arquivo csv
-        const csv = fs.readFileSync(fileName, "utf8")
+        const csv = fs.readFileSync(filePath, "utf8")
         // Converte de um arquivo csv para json com o papaparse
         const csvObject = Papa.parse(csv,{
             header:true,
             dynamicTyping: true
         }).data
         // Obtém os valores dos atributos em uma lista
-        const obj2 = Object.values(Marcos)
+        const obj2 = Object.values(Marco)
         const csvArray: Schema[] = z.array(usuarioSchema).parse(csvObject)
         // Percorre todo os usuários do CSV
         for(const usuario of csvArray){
             // Verifica se o email existe e faz mais verificações caso exista
             // Afim de manter a integridade
-            if(usuario.Email === "marcos@gmail.com"){
+            if(usuario.Email === "marco@gmail.com"){
                 // Obtém os valores das chaves
             const obj1 = Object.values(usuario)
             // Percorre cada atributo do usuário padrão
@@ -385,7 +387,7 @@ export async function csvExiste(fileName:string){
                         if(!(await bcrypt.compare(item as string, obj1[obj2.indexOf(item)] as string ))){
                             // caso false ele envia a mensagem de aviso
                             // sobre a senha que foi alterada
-                            console.log("\n Foi Vasculhado o arquivo csv, e foi identificado que a senha do Usuário Marcos foi alterada!")
+                            console.log("\n Foi Vasculhado o arquivo csv, e foi identificado que a senha do Usuário Marco foi alterada!")
                             return
 
                         }
@@ -411,7 +413,7 @@ export async function csvExiste(fileName:string){
                 // Recomenda-se Deletar o arquivo csv e deixar
                 // Que o código crie um novo do zero
                 if(csvArray.length === csvArray.indexOf(usuario)+1){
-                    console.log("Usuário Administrador Marcos não encontrado")
+                    console.log("Usuário Administrador Marco não encontrado")
                     console.log("Por favor, delete o arquivo csv, e reinicie o programa")
                     console.log("Permitindo que o programa crie um do novo arquivo csv")
                     console.log("Para que as exigências internas sejam atendidas")

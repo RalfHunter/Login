@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { escreverCSV } from "./csvService";
 
 import { format } from "date-fns";
-
+import { filePath } from "..";
 // Linha de leitura
 export const rl = readline.createInterface({
     input: process.stdin,
@@ -38,8 +38,8 @@ export function questionAsync(query: string): Promise<string> {
     const user = {
         UUID: uuidv4(),
         Nome: await questionAsync("Insira um Nome: "),
-        Email: await questionAsync("Insira um Emal: "),
-        Papel: await questionAsync("Insira o Papel: ") || "Convidado",
+        Email: await questionAsync("Insira um Email: "),
+        Papel: await questionAsync("Insira o Papel(Convidado/Administrador): ") || "Convidado",
         Senha: await questionAsync("Insira uma Senha: "),
         dataCadastro: validarData(await questionAsync("Insira a Data de Cadastro: ")),
         dataAlteracao: validarData(await questionAsync("Insira a Data de Alteração: ")) ,
@@ -53,7 +53,10 @@ export function questionAsync(query: string): Promise<string> {
     
     // Se não houver erro escreve as credências em um CSV, mas antes
     // Verifica se o Email ou UUID passados já não existem no CSV
-    escreverCSV("usuarios.csv", userFinal)
+
+    
+      escreverCSV(filePath, userFinal)
+    
     }catch(err){
         console.log("Erro na hora de validar os dados passsados!:  ",err)
         return

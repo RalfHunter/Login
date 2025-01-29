@@ -62,16 +62,17 @@ const papeis_1 = require("../models/papeis");
 const uuid_1 = require("uuid");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const uuid_2 = require("uuid");
+const __1 = require("..");
 // AVISO RELEVANTE
 // Usa a biblioteca do json2csv para transcrever os objetos-jsons criados
 // Para um csv para só então salva-los usando o fs
 // Usa a biblioteca do papaparse para transformar arquivos csv em json
 //
 // Função para escrever no CSV
-function escreverCSV(fileName, user) {
+function escreverCSV(filePath, user) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (fs_1.default.existsSync(fileName)) {
-            const csv = fs_1.default.readFileSync(fileName, 'utf8');
+        if (fs_1.default.existsSync(filePath)) {
+            const csv = fs_1.default.readFileSync(filePath, 'utf8');
             const cvsToZod = papaparse_1.default.parse(csv, {
                 header: true,
                 dynamicTyping: true
@@ -93,11 +94,11 @@ function escreverCSV(fileName, user) {
             console.table([user]);
             cvsToZod.push(user);
             const csv2 = yield json2csv.parseAsync(cvsToZod, { header: true });
-            fs_1.default.writeFileSync(fileName, csv2, "utf8");
+            fs_1.default.writeFileSync(filePath, csv2, "utf8");
         }
         else {
             const csv = yield json2csv.parseAsync(user, { header: true });
-            fs_1.default.writeFileSync(fileName, csv, "utf8");
+            fs_1.default.writeFileSync(filePath, csv, "utf8");
         }
     });
 }
@@ -154,14 +155,14 @@ function deletarUsuario(filePath, email, senha) {
         const user_cadastro = zod_1.z.array(usu_rio_1.usuarioSchema).parse(csvObject);
         try {
             let uid = (yield (0, usu_rioService_1.questionAsync)("Por favor forneça uma UUID válida: ")).toString();
-            // verifica se a UUID não pertence ao usuário máximo Marcos
+            // verifica se a UUID não pertence ao usuário máximo Marco
             for (const user of user_cadastro) {
-                if (user.Email === "marcos@gmail.com" && user.UUID === uid && user.Email === email) {
+                if (user.Email === "marco@gmail.com" && user.UUID === uid && user.Email === email) {
                     console.log("Não é possivel deletar este usuário por motivos de integridade!");
                     return;
                 }
             }
-            // Caso não seja o Marcos ele faz novamente a varredura
+            // Caso não seja o Marco ele faz novamente a varredura
             for (const user of user_cadastro) {
                 if (user.UUID == uid) {
                     const index = user_cadastro.indexOf(user);
@@ -244,16 +245,16 @@ function alterUsuario(filePath) {
         try {
             // Propriedade para Receber a UUID
             let uid = (yield (0, usu_rioService_1.questionAsync)("Forneça a UUID para editar o usuário: "));
-            // For para comparar se o usuário a ser alterado não possui o email marcos@gmail.com
+            // For para comparar se o usuário a ser alterado não possui o email marco@gmail.com
             for (const user of user_cadastro) {
                 // caso seja retorna mensagem de aviso e encerra a função
-                if (user.Email === "marcos@gmail.com" && user.UUID === uid) {
+                if (user.Email === "marco@gmail.com" && user.UUID === uid) {
                     console.log("Não é possivel alterar este usuário por motivos de integridade!");
                     return;
                 }
             }
             {
-                // Caso o usuário a ser alterado realmente não seja o marcos e exista no Arquivo csv ele permite alterações
+                // Caso o usuário a ser alterado realmente não seja o marco e exista no Arquivo csv ele permite alterações
                 for (const user of user_cadastro) {
                     if (user.UUID == uid) {
                         // Pede que o Adiministrado logado informe as novos atributos do usuário
@@ -345,11 +346,11 @@ function retornarUsuarios(filePath, Email, Senha) {
     console.log("Dados incorretos ou Usuário não possui uma conta.");
 }
 // Verificando a Existência de um arquivo csv, caso não encontre ele cria um usuário padrão
-function csvExiste(fileName) {
+function csvExiste() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // Caso o arquivo não exista
-            if (!fs_1.default.existsSync(fileName)) {
+            if (!fs_1.default.existsSync(__1.filePath)) {
                 // Emite um aviso de que não foi encontrado
                 // Toma as devidas providências
                 console.log("Arquivo csv não encontrado, criando um usuário padrão");
@@ -357,53 +358,53 @@ function csvExiste(fileName) {
                 // Ele apesar de ser igual aos outros, dentro do código
                 // Ele é tratado como execessão a regra
                 // Afim de manter a integridade
-                const marcos = {
+                const marco = {
                     UUID: (0, uuid_1.v4)(),
-                    Nome: "Marcos",
-                    Email: "marcos@gmail.com",
-                    Senha: "Marcos123$%",
+                    Nome: "Marco",
+                    Email: "marco@gmail.com",
+                    Senha: "Marco123$%",
                     Papel: papeis_1.Papel.Administrador,
                     dataCadastro: new Date(),
                     dataAlteracao: new Date(),
                     Status: "Ativo"
                 };
                 // Criptografa a senha
-                marcos.Senha = bcrypt_1.default.hashSync(marcos.Senha, 10);
-                const Marcos = usu_rio_1.usuarioSchema.parse(marcos);
-                const csv = yield json2csv.parseAsync(Marcos, { header: true });
-                // Salva as alterações em um csv
-                fs_1.default.writeFileSync(fileName, csv, "utf8");
+                marco.Senha = bcrypt_1.default.hashSync(marco.Senha, 10);
+                const Marco = usu_rio_1.usuarioSchema.parse(marco);
+                const csv = yield json2csv.parseAsync(Marco, { header: true });
+                // Salva as alterações em um cs
+                fs_1.default.writeFileSync(__1.filePath, csv, "utf8");
             }
             else {
                 // Caso o arquivo CSV exista ele verifica se o Usuário "Padrão"
                 // Existe no arquivo
-                const marcos = {
+                const marco = {
                     UUID: (0, uuid_1.v4)(),
-                    Nome: "Marcos",
-                    Email: "marcos@gmail.com",
-                    Senha: "Marcos123$%",
+                    Nome: "Marco",
+                    Email: "marco@gmail.com",
+                    Senha: "Marco123$%",
                     Papel: papeis_1.Papel.Administrador,
                     dataCadastro: new Date(),
                     dataAlteracao: new Date(),
                     Status: "Ativo"
                 };
                 // compara este tipo, caso falhe ele retonra um erro "catch"
-                const Marcos = usu_rio_1.usuarioSchema.parse(marcos);
+                const Marco = usu_rio_1.usuarioSchema.parse(marco);
                 // Lê um arquivo csv
-                const csv = fs_1.default.readFileSync(fileName, "utf8");
+                const csv = fs_1.default.readFileSync(__1.filePath, "utf8");
                 // Converte de um arquivo csv para json com o papaparse
                 const csvObject = papaparse_1.default.parse(csv, {
                     header: true,
                     dynamicTyping: true
                 }).data;
                 // Obtém os valores dos atributos em uma lista
-                const obj2 = Object.values(Marcos);
+                const obj2 = Object.values(Marco);
                 const csvArray = zod_1.z.array(usu_rio_1.usuarioSchema).parse(csvObject);
                 // Percorre todo os usuários do CSV
                 for (const usuario of csvArray) {
                     // Verifica se o email existe e faz mais verificações caso exista
                     // Afim de manter a integridade
-                    if (usuario.Email === "marcos@gmail.com") {
+                    if (usuario.Email === "marco@gmail.com") {
                         // Obtém os valores das chaves
                         const obj1 = Object.values(usuario);
                         // Percorre cada atributo do usuário padrão
@@ -428,7 +429,7 @@ function csvExiste(fileName) {
                                     if (!(yield bcrypt_1.default.compare(item, obj1[obj2.indexOf(item)]))) {
                                         // caso false ele envia a mensagem de aviso
                                         // sobre a senha que foi alterada
-                                        console.log("\n Foi Vasculhado o arquivo csv, e foi identificado que a senha do Usuário Marcos foi alterada!");
+                                        console.log("\n Foi Vasculhado o arquivo csv, e foi identificado que a senha do Usuário Marco foi alterada!");
                                         return;
                                     }
                                 }
@@ -453,7 +454,7 @@ function csvExiste(fileName) {
                         // Recomenda-se Deletar o arquivo csv e deixar
                         // Que o código crie um novo do zero
                         if (csvArray.length === csvArray.indexOf(usuario) + 1) {
-                            console.log("Usuário Administrador Marcos não encontrado");
+                            console.log("Usuário Administrador Marco não encontrado");
                             console.log("Por favor, delete o arquivo csv, e reinicie o programa");
                             console.log("Permitindo que o programa crie um do novo arquivo csv");
                             console.log("Para que as exigências internas sejam atendidas");
